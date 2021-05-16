@@ -13,3 +13,6 @@ MonoBehaviour:
   m_Name: InputFeature
   m_EditorClassIdentifier: 
   editorComment: 
+  EnableRandomInput: 1
+  PercentRandomMove: 20
+  PercentRandomFire: 10

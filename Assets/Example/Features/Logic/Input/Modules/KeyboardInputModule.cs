@@ -20,6 +20,7 @@ namespace Example.Features.Logic.Input.Modules
 
         void IModuleBase.OnConstruct()
         {
+          
         }
 
         void IModuleBase.OnDeconstruct()
@@ -28,14 +29,14 @@ namespace Example.Features.Logic.Input.Modules
 
         void IUpdate.Update(in float deltaTime)
         {
-            if (PlayerIsEmpty()) return;
+            if (PlayerIsEmpty(world)) return;
 
             var dir = GetMoveInput();
             if (dir != Vector3.zero)
             {
                 world.AddMarker(new InputDir()
                 {
-                    dir = dir
+                    Dir = dir
                 });
             }
 
@@ -72,7 +73,7 @@ namespace Example.Features.Logic.Input.Modules
             return dir;
         }
 
-        private bool PlayerIsEmpty()
+        public static bool PlayerIsEmpty(World world)
         {
             var playersFeature = world.GetFeature<PlayersFeature>();
             var playerEntity = playersFeature.GetEntityByActorId(playersFeature.GetActivePlayerId());

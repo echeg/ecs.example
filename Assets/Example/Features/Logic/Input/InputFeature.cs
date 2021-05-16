@@ -1,4 +1,5 @@
 ﻿using ME.ECS;
+using UnityEngine;
 
 namespace Example.Features.Logic {
 
@@ -15,14 +16,22 @@ namespace Example.Features.Logic {
      Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.ArrayBoundsChecks, false),
      Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.DivideByZeroChecks, false)]
     #endif
-    public sealed class InputFeature : Feature {
+    public sealed class InputFeature : Feature
+    {
 
+        public bool EnableRandomInput;
+        [Range(0, 100)]
+        public int PercentRandomMove;
+        [Range(0, 100)]
+        public int PercentRandomFire;
+        
         private RPCId movePlayerRpcId;
         private RPCId fireRpcId;
         
         protected override void OnConstruct() {
 
             this.AddModule<KeyboardInputModule>();
+            this.AddModule<RandomInputModule>();
             this.AddSystem<MarkerToRPCSystem>();
 
             var net = this.world.GetModule<NetworkModule>();
@@ -58,7 +67,7 @@ namespace Example.Features.Logic {
             var playerEntity = playersFeature.GetEntityByActorId(actorId);
 
             playerEntity.SetData(new Example.Features.PlayerMovement.Components.MoveAction() {
-                dir = dir.dir
+                dir = dir.Dir
             }, ComponentLifetime.NotifyAllSystems);
 
         }
