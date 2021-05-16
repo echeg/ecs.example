@@ -9,7 +9,7 @@ namespace Example {
     using TState = ExampleState;
     using ME.ECS;
     using ME.ECS.Views.Providers;
-    using Example.Modules;
+    using Modules;
     
     #if ECS_COMPILE_IL2CPP_OPTIONS
     [Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.NullChecks, false),
@@ -18,59 +18,66 @@ namespace Example {
     #endif
     public sealed class ExampleInitializer : InitializerBase {
 
-        private World world;
+        private World _world;
 
         public void Update() {
 
-            if (this.world == null) {
-
-                // Initialize world with 0.033 time step
-                WorldUtilities.CreateWorld<TState>(ref this.world, 0.033f);
-                {
-                    #if FPS_MODULE_SUPPORT
-                    this.world.AddModule<FPSModule>();
-                    #endif
-                    this.world.AddModule<StatesHistoryModule>();
-                    this.world.AddModule<NetworkModule>();
-                    
-                    // Add your custom modules here
-                    
-                    // Create new state
-                    this.world.SetState<TState>(WorldUtilities.CreateState<TState>());
-                    ComponentsInitializer.DoInit();
-                    this.Initialize(this.world);
-
-                    // Add your custom systems here
-                    
-                }
-                // Save initialization state
-                this.world.SaveResetState<TState>();
-
+            if (_world == null)
+            {
+                CreateWorld();
             }
 
-            if (this.world != null) {
-
-                var dt = Time.deltaTime;
-                this.world.PreUpdate(dt);
-                this.world.Update(dt);
-
+            if (_world != null)
+            {
+                UpdateWorld();
             }
 
         }
 
+        private void UpdateWorld()
+        {
+            var dt = Time.deltaTime;
+            _world.PreUpdate(dt);
+            _world.Update(dt);
+        }
+
+        private void CreateWorld()
+        {
+            // Initialize world with 0.033 time step
+            WorldUtilities.CreateWorld<TState>(ref _world, 0.033f);
+            {
+#if FPS_MODULE_SUPPORT
+                    this.world.AddModule<FPSModule>();
+#endif
+                _world.AddModule<StatesHistoryModule>();
+                _world.AddModule<NetworkModule>();
+
+                // Add your custom modules here
+
+                // Create new state
+                _world.SetState<TState>(WorldUtilities.CreateState<TState>());
+                ComponentsInitializer.DoInit();
+                Initialize(_world);
+                _world.SetSeed((uint) 1);
+                // Add your custom systems here
+            }
+            // Save initialization state
+            _world.SaveResetState<TState>();
+        }
+
         public void LateUpdate() {
             
-            if (this.world != null) this.world.LateUpdate(Time.deltaTime);
+            if (_world != null) _world.LateUpdate(Time.deltaTime);
             
         }
 
         public void OnDestroy() {
             
-            if (this.world == null || this.world.isActive == false) return;
+            if (_world == null || _world.isActive == false) return;
             
-            this.DeInitializeFeatures(this.world);
+            DeInitializeFeatures(_world);
             // Release world
-            WorldUtilities.ReleaseWorld<TState>(ref this.world);
+            WorldUtilities.ReleaseWorld<TState>(ref _world);
 
         }
 
@@ -84,7 +91,7 @@ namespace ME.ECS {
 
         public static void InitTypeId() {
             
-            ComponentsInitializer.InitTypeIdPartial();
+            InitTypeIdPartial();
             
         }
 
@@ -92,11 +99,11 @@ namespace ME.ECS {
 
         public static void DoInit() {
             
-            ComponentsInitializer.Init(ref Worlds.currentWorld.GetStructComponents());
+            Init(ref Worlds.currentWorld.GetStructComponents());
             
         }
 
-        static partial void Init(ref ME.ECS.StructComponentsContainer structComponentsContainer);
+        static partial void Init(ref StructComponentsContainer structComponentsContainer);
 
     }
 

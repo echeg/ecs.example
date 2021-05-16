@@ -180,11 +180,11 @@ namespace Example.Modules {
 
                 var world = ME.ECS.Worlds.currentWorld;
                 if (world == null) return;
-                var hash = Photon.Pun.PhotonNetwork.CurrentRoom.Name.GetHashCode();
-                if (hash < 0) hash = -hash;
-                if (hash == 0) hash = 1;
-                world.SetSeed((uint)hash);
-                UnityEngine.Debug.Log("Seed: " + hash);
+                //var hash = ;
+                //if (hash < 0) hash = -hash;
+                //if (hash == 0) hash = 1;
+                //world.SetSeed((uint)hash);
+                UnityEngine.Debug.Log("Seed: " + Photon.Pun.PhotonNetwork.CurrentRoom.Name.GetHashCode());
                 var networkModule = world.GetModule<NetworkModule>();
                 networkModule.SetRoom(Photon.Pun.PhotonNetwork.CurrentRoom);
 
