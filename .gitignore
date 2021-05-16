@@ -43,6 +43,22 @@ ExportedObj/
 *.opendb
 *.VC.db
 
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+.idea
+.idea/
+.vs
+.vs/
+
 # Unity3D generated meta files
 *.pidb.meta
 *.pdb.meta
