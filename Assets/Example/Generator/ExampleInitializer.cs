@@ -1,27 +1,51 @@
 using UnityEngine;
 
 #region Namespaces
-namespace Example.Systems {} namespace Example.Components {} namespace Example.Modules {} namespace Example.Features {} namespace Example.Markers {} namespace Example.Views {}
+
+namespace Example.Systems
+{
+}
+
+namespace Example.Components
+{
+}
+
+namespace Example.Modules
+{
+}
+
+namespace Example.Features
+{
+}
+
+namespace Example.Markers
+{
+}
+
+namespace Example.Views
+{
+}
+
 #endregion
 
-namespace Example {
-    
+namespace Example
+{
     using TState = ExampleState;
     using ME.ECS;
     using ME.ECS.Views.Providers;
     using Modules;
-    
-    #if ECS_COMPILE_IL2CPP_OPTIONS
+
+#if ECS_COMPILE_IL2CPP_OPTIONS
     [Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.NullChecks, false),
      Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.ArrayBoundsChecks, false),
      Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.DivideByZeroChecks, false)]
-    #endif
-    public sealed class ExampleInitializer : InitializerBase {
-
+#endif
+    public sealed class ExampleInitializer : InitializerBase
+    {
         private World _world;
 
-        public void Update() {
-
+        public void Update()
+        {
             if (_world == null)
             {
                 CreateWorld();
@@ -31,7 +55,6 @@ namespace Example {
             {
                 UpdateWorld();
             }
-
         }
 
         private void UpdateWorld()
@@ -65,46 +88,38 @@ namespace Example {
             _world.SaveResetState<TState>();
         }
 
-        public void LateUpdate() {
-            
+        public void LateUpdate()
+        {
             if (_world != null) _world.LateUpdate(Time.deltaTime);
-            
         }
 
-        public void OnDestroy() {
-            
+        public void OnDestroy()
+        {
             if (_world == null || _world.isActive == false) return;
-            
+
             DeInitializeFeatures(_world);
             // Release world
             WorldUtilities.ReleaseWorld<TState>(ref _world);
-
         }
-
     }
-    
 }
 
-namespace ME.ECS {
-    
-    public static partial class ComponentsInitializer {
-
-        public static void InitTypeId() {
-            
+namespace ME.ECS
+{
+    public static partial class ComponentsInitializer
+    {
+        public static void InitTypeId()
+        {
             InitTypeIdPartial();
-            
         }
 
         static partial void InitTypeIdPartial();
 
-        public static void DoInit() {
-            
+        public static void DoInit()
+        {
             Init(ref Worlds.currentWorld.GetStructComponents());
-            
         }
 
         static partial void Init(ref StructComponentsContainer structComponentsContainer);
-
     }
-
 }
