@@ -285,10 +285,11 @@ namespace Example.Modules {
 
         }
 
+        byte _maxPlayer = 3;
         public override void OnRoomListUpdate(System.Collections.Generic.List<Photon.Realtime.RoomInfo> roomList) {
 
             var guid = string.Format("{0}-{1}", System.Guid.NewGuid(), UnityEngine.Random.Range(0, 1000000));
-            var roomOptions = new Photon.Realtime.RoomOptions() { MaxPlayers = 2, PublishUserId = true };
+            var roomOptions = new Photon.Realtime.RoomOptions() { MaxPlayers = _maxPlayer, PublishUserId = true };
             var room = roomList.FirstOrDefault(x => x.IsOpen == true);
             if (room != null) {
 
@@ -313,7 +314,7 @@ namespace Example.Modules {
                 if (((ME.ECS.Network.INetworkModuleBase)networkModule).GetRPCOrder() > 0) {
 
                     // Turn off this check to run game locally without awaiting for other player to join
-                    if (Photon.Pun.PhotonNetwork.CurrentRoom.PlayerCount == 2) {
+                    if (Photon.Pun.PhotonNetwork.CurrentRoom.PlayerCount == _maxPlayer) {
                     
                         this.timeSyncedConnected = true;
                         
